@@ -1,23 +1,19 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Provider as ReduxStoreProvider } from "react-redux";
+
+import AppNavigator from "./components/AppNavigator";
+import { makeStore } from "./store";
+
+const store = makeStore();
 
 interface Props {}
 
 export default class App extends React.PureComponent<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <ReduxStoreProvider store={store}>
+        <AppNavigator />
+      </ReduxStoreProvider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
