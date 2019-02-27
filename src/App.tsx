@@ -1,4 +1,5 @@
 import * as React from "react";
+import { StatusBar } from "react-native";
 import { Provider as ReduxStoreProvider } from "react-redux";
 
 import AppNavigator from "./components/AppNavigator";
@@ -14,7 +15,10 @@ export default class App extends React.PureComponent<Props> {
   render() {
     return (
       <ReduxStoreProvider store={store}>
-        <AppNavigator />
+        <React.Fragment>
+          <StatusBar barStyle="light-content" />
+          <AppNavigator />
+        </React.Fragment>
       </ReduxStoreProvider>
     );
   }
