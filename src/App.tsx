@@ -3,8 +3,10 @@ import { Provider as ReduxStoreProvider } from "react-redux";
 
 import AppNavigator from "./components/AppNavigator";
 import { makeStore } from "./store";
+import { SocialAppAPIClient } from "./apiClient";
 
-const store = makeStore();
+const apiClient = new SocialAppAPIClient();
+const store = makeStore(apiClient);
 
 interface Props {}
 
