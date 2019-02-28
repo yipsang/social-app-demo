@@ -1,4 +1,4 @@
-interface PaginatorType<T> {
+export interface PaginatorType<T> {
     next(): Promise<T[]>;
     isEnd: boolean;
     cursor: number;
