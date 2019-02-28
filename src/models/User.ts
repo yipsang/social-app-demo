@@ -45,14 +45,8 @@ const addressSchema = yup.object<Address>().shape({
 
 const companySchema = yup.object<Company>().shape({
     name: yup.string().required(),
-    catchPhase: yup
-        .string()
-        .transform((value): string[] => value.split(" "))
-        .required(),
-    bs: yup
-        .string()
-        .transform((value): string[] => value.split(" "))
-        .required()
+    catchPhrase: yup.string().required(),
+    bs: yup.string().required()
 });
 
 export const userSchema = yup.object<User>().shape({
@@ -69,9 +63,6 @@ export const userSchema = yup.object<User>().shape({
         .required(),
     address: addressSchema.required(),
     phone: yup.string().required(),
-    website: yup
-        .string()
-        .url()
-        .required(),
+    website: yup.string().required(),
     company: companySchema.required()
 });
