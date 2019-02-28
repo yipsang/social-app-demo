@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   NavigationScreenProp,
   SafeAreaView,
@@ -9,8 +9,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 import * as Color from "../styles/colors";
 
-import { RouteName } from "./AppNavigator";
-
 const styles = StyleSheet.create({
   bottomView: {
     backgroundColor: Color.mineShaft
@@ -18,7 +16,8 @@ const styles = StyleSheet.create({
   tabsContainer: {
     backgroundColor: Color.mineShaft,
     flexDirection: "row",
-    paddingTop: 15
+    paddingTop: 10,
+    paddingBottom: 10
   },
   tab: {
     flex: 1,
@@ -79,11 +78,11 @@ export default class AppTabBar extends React.PureComponent<Props, State> {
   }
 
   onPressPostTab = () => {
-    this.props.navigation.navigate(RouteName.PostTab);
+    this.props.navigation.navigate("PostTab");
   };
 
   onPressAlbumTab = () => {
-    this.props.navigation.navigate(RouteName.AlbumTab);
+    this.props.navigation.navigate("AlbumTab");
   };
 
   renderTab = (config: TabConfig) => {
