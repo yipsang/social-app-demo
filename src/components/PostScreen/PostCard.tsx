@@ -1,17 +1,11 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Post } from "../../models/Post";
-import { User } from "../../models/User";
+import { PostItem } from "../../models/PostItem";
 
 import * as Color from "../../styles/colors";
 
-export interface PostItem {
-    post: Post;
-    user: User;
-}
-
-type Props = { item: PostItem };
+type Props = { postItem: PostItem };
 
 const styles = StyleSheet.create({
     container: {
@@ -45,7 +39,7 @@ const styles = StyleSheet.create({
 
 export default class PostCard extends React.PureComponent<Props> {
     render() {
-        const { post, user } = this.props.item;
+        const { post, user } = this.props.postItem;
         return (
             <View style={styles.container}>
                 <View style={styles.cell}>
