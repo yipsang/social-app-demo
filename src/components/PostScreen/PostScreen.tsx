@@ -1,21 +1,25 @@
 import * as React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
+import { NavigationScreenProps } from "react-navigation";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import PostCard, { PostItem } from "./PostCard";
+import PostCard from "./PostCard";
+import { RouteName } from "../AppNavigator";
 
 import { Paginator } from "../../paginator";
 import { SocialAppAPIClient } from "../../apiClient";
+import { displayAlert } from "../../utils/alert";
 import { Post } from "../../models/Post";
 import { User } from "../../models/User";
+import { PostItem } from "../../models/PostItem";
 
 import { Dispatch } from "../../store";
 import { fetchUser } from "../../actions/userAction";
 
 import * as Color from "../../styles/colors";
 
-CONTENT_BOTTOM_INSET = 10;
+const CONTENT_BOTTOM_INSET = 10;
 
 const styles = StyleSheet.create({
     container: {
@@ -35,7 +39,7 @@ interface UserIdentityMap {
 
 type ActionProps = ReturnType<typeof mapDispatchToProps>;
 
-type Props = ActionProps;
+type Props = ActionProps & NavigationScreenProps<any>;
 
 type State = { posts: Post[]; userIdentityMap: UserIdentityMap };
 
@@ -72,26 +76,43 @@ class PostScreen extends React.PureComponent<Props, State> {
         this.loadNextPage();
     }
 
-    loadNextPage = async () => {
-        const posts = await postPaginator.next();
-        const users: User[] = (await this.getUsers([
-            ...new Set(posts.map(p => p.userId))
-        ])) as any;
-        this.setState(state => {
-            const { posts: currentPosts, userIdentityMap } = state;
-            return {
-                posts: [...currentPosts, ...posts],
-                userIdentityMap: {
-                    ...userIdentityMap,
-                    ...this.transformToUserIdentityMap(users)
-                }
-            };
+    onPostCardPress = (index: number) => () => {
+        const { posts, userIdentityMap } = this.state;
+        const post = posts[index];
+        const user = userIdentityMap[post.userId];
+        this.props.navigation.navigate(RouteName.PostDetailsScreen, {
+            postItem: { post, user }
         });
     };
 
-    renderPostCard(item: { item: PostItem }) {
-        return <PostCard item={item.item} />;
-    }
+    loadNextPage = async () => {
+        const posts = await postPaginator.next();
+        try {
+            const users: User[] = (await this.getUsers([
+                ...new Set(posts.map(p => p.userId))
+            ])) as any;
+            this.setState(state => {
+                const { posts: currentPosts, userIdentityMap } = state;
+                return {
+                    posts: [...currentPosts, ...posts],
+                    userIdentityMap: {
+                        ...userIdentityMap,
+                        ...this.transformToUserIdentityMap(users)
+                    }
+                };
+            });
+        } catch {
+            displayAlert("Unkown Error", "Please try again later.");
+        }
+    };
+
+    renderPostCard = (data: { item: PostItem; index: number }) => {
+        return (
+            <TouchableOpacity onPress={this.onPostCardPress(data.index)}>
+                <PostCard postItem={data.item} />
+            </TouchableOpacity>
+        );
+    };
 
     getPostItem = (): PostItem[] => {
         const { posts, userIdentityMap } = this.state;

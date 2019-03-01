@@ -5,13 +5,15 @@ import {
 } from "react-navigation";
 import { HomeScreen, DetailsScreen, CounterScreen } from "./Screen";
 import PostScreen from "./PostScreen/PostScreen";
+import PostDetailsScreen from "./PostScreen/PostDetailsScreen";
 import { withTabBar, TabID } from "./TabBar";
 
 import * as Color from "../styles/colors";
 
 export enum RouteName {
   PostTab = "PostTab",
-  AlbumTab = "AlbumTab"
+  AlbumTab = "AlbumTab",
+  PostDetailsScreen = "PostDetailsScreen"
 }
 
 const appNavigationOptions = {
@@ -27,6 +29,10 @@ const PostStackNavigator = createStackNavigator(
   {
     Posts: {
       screen: withTabBar(PostScreen, TabID.Post),
+      navigationOptions: appNavigationOptions
+    },
+    PostDetailsScreen: {
+      screen: PostDetailsScreen,
       navigationOptions: appNavigationOptions
     }
   },
