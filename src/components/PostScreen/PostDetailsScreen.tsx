@@ -16,8 +16,10 @@ import { Comment } from "../../models/Comment";
 import { Dispatch } from "../../store";
 import { fetchComments } from "../../actions/commentAction";
 import { displayAlert } from "../../utils/alert";
+import { RouteName } from "../AppNavigator";
 
-import CommentCard, { CommentSkeleton } from "./CommentCard";
+import CommentCard from "./CommentCard";
+import CardSkeleton from "../CardSkeleton";
 
 import * as Color from "../../styles/colors";
 
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     authorNameBubble: {
-        paddingVertical: 10,
+        paddingVertical: 5,
         paddingHorizontal: 30,
         backgroundColor: Color.mineShaftSolid,
         borderRadius: 30,
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 12
     },
-    separatorContainer: {},
     separator: {
         marginTop: 10,
         textAlign: "center",
@@ -115,14 +116,21 @@ class PostDetailsScreen extends React.PureComponent<Props, State> {
         }
     }
 
+    onAuthorNamePress = () => {
+        const { user } = this.props.navigation.getParam("postItem");
+        this.props.navigation.push(RouteName.UserDetailsScreen, { user });
+    };
+
     renderAuthorContent = () => {
         const { post, user } = this.props.navigation.getParam("postItem");
         return (
             <View>
                 <View style={styles.authorNameContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={this.onAuthorNamePress}>
                         <View style={styles.authorNameBubble}>
-                            <Text style={styles.authorName}>{user.name}</Text>
+                            <Text style={styles.authorName}>
+                                {user.username}
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -131,7 +139,7 @@ class PostDetailsScreen extends React.PureComponent<Props, State> {
                         <Text style={styles.postContent}>{post.body}</Text>
                     </View>
                 </View>
-                <View style={styles.separatorContainer}>
+                <View>
                     <Text style={styles.separator}>· · ·</Text>
                 </View>
             </View>
@@ -143,10 +151,10 @@ class PostDetailsScreen extends React.PureComponent<Props, State> {
     };
 
     renderCommentSkeleton = () => {
-        return <CommentSkeleton />;
+        return <CardSkeleton skeletonLengths={[150, 250, null, null]} />;
     };
 
-    skelewtonKeyExtractor(_item: number, index: number) {
+    skeletonKeyExtractor(_item: number, index: number) {
         return index.toString();
     }
 
@@ -163,7 +171,7 @@ class PostDetailsScreen extends React.PureComponent<Props, State> {
                         contentContainerStyle={styles.contentContainer}
                         data={[1, 2, 3, 4, 5]}
                         renderItem={this.renderCommentSkeleton}
-                        keyExtractor={this.skelewtonKeyExtractor}
+                        keyExtractor={this.skeletonKeyExtractor}
                         ListHeaderComponent={this.renderAuthorContent}
                     />
                 </View>
