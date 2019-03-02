@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 10,
         paddingHorizontal: 5
+    },
+    cellContainer: {
+        flex: 1,
+        padding: 5
     }
 });
 
@@ -115,11 +119,20 @@ class AlbumScreen extends React.PureComponent<Props, State> {
 
     renderAlbumPreview = (data: { item: AlbumItem | number }) => {
         if (typeof data.item == "number") {
-            return <ImagePreviewSkeleton />;
+            return (
+                <View style={styles.cellContainer}>
+                    <ImagePreviewSkeleton />
+                </View>
+            );
         }
         return (
-            <TouchableOpacity style={styles.touchableContainer}>
-                <AlbumPreview albumItem={data.item} />
+            <TouchableOpacity
+                style={styles.touchableContainer}
+                onPress={this.onPreviewPress(data.index)}
+            >
+                <View style={styles.cellContainer}>
+                    <AlbumPreview albumItem={data.item} />
+                </View>
             </TouchableOpacity>
         );
     };

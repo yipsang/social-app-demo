@@ -9,8 +9,7 @@ type Props = { albumItem: AlbumItem };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 5
+        flex: 1
     },
     imageContainer: {
         backgroundColor: Color.nobel,

@@ -5,13 +5,11 @@ import * as Color from "../styles/colors";
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 5
+        flex: 1
     },
     skeleton: {
         flex: 1,
-        opacity: 0.4,
-        backgroundColor: Color.nobel,
+        backgroundColor: Color.doveGray,
         borderRadius: 5,
         aspectRatio: 1
     }
