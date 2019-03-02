@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import PostCard from "./PostCard";
+import CardSkeleton from "../CardSkeleton";
 import { RouteName } from "../AppNavigator";
 
 import { Paginator } from "../../paginator";
@@ -22,6 +23,12 @@ import * as Color from "../../styles/colors";
 const CONTENT_BOTTOM_INSET = 10;
 
 const styles = StyleSheet.create({
+    skeletonsContainer: {
+        flex: 1
+    },
+    flatList: {
+        alignSelf: "stretch"
+    },
     container: {
         flex: 1,
         backgroundColor: Color.codGray,
@@ -41,7 +48,11 @@ type ActionProps = ReturnType<typeof mapDispatchToProps>;
 
 type Props = ActionProps & NavigationScreenProps<any>;
 
-type State = { posts: Post[]; userIdentityMap: UserIdentityMap };
+type State = {
+    posts: Post[];
+    userIdentityMap: UserIdentityMap;
+    isLoading: boolean;
+};
 
 const apiClient = new SocialAppAPIClient();
 const postPaginator = new Paginator(apiClient.fetchPosts, 10);
@@ -55,7 +66,8 @@ class PostScreen extends React.PureComponent<Props, State> {
         super(props);
         this.state = {
             posts: [],
-            userIdentityMap: {}
+            userIdentityMap: {},
+            isLoading: true
         };
     }
 
@@ -86,8 +98,9 @@ class PostScreen extends React.PureComponent<Props, State> {
     };
 
     loadNextPage = async () => {
-        const posts = await postPaginator.next();
+        this.setState({ isLoading: true });
         try {
+            const posts = await postPaginator.next();
             const users: User[] = (await this.getUsers([
                 ...new Set(posts.map(p => p.userId))
             ])) as any;
@@ -103,6 +116,8 @@ class PostScreen extends React.PureComponent<Props, State> {
             });
         } catch {
             displayAlert("Unkown Error", "Please try again later.");
+        } finally {
+            this.setState({ isLoading: false });
         }
     };
 
@@ -123,16 +138,43 @@ class PostScreen extends React.PureComponent<Props, State> {
         return index.toString();
     }
 
+    renderPostSkeletons = () => {
+        return (
+            <View style={styles.skeletonsContainer}>
+                {[1, 2, 3, 4, 5].map(i => (
+                    <CardSkeleton
+                        key={i}
+                        skeletonLengths={[
+                            150,
+                            250,
+                            250,
+                            null,
+                            null,
+                            null,
+                            null
+                        ]}
+                    />
+                ))}
+            </View>
+        );
+    };
+
     render() {
         return (
             <View style={styles.container}>
                 <FlatList
+                    style={styles.flatList}
                     contentContainerStyle={styles.contentContainer}
                     data={this.getPostItem()}
                     renderItem={this.renderPostCard}
                     keyExtractor={this.keyExtractor}
                     onEndReachedThreshold={10}
                     onEndReached={this.loadNextPage}
+                    ListFooterComponent={
+                        this.state.isLoading
+                            ? this.renderPostSkeletons
+                            : undefined
+                    }
                 />
             </View>
         );
