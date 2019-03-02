@@ -3,10 +3,10 @@ import {
   createStackNavigator,
   createBottomTabNavigator
 } from "react-navigation";
-import { HomeScreen, DetailsScreen, CounterScreen } from "./Screen";
 import PostScreen from "./PostScreen/PostScreen";
 import PostDetailsScreen from "./PostScreen/PostDetailsScreen";
 import UserDetailsScreen from "./UserDetailsScreen";
+import AlbumScreen from "./AlbumScreen/AlbumScreen";
 import { withTabBar, TabID } from "./TabBar";
 
 import * as Color from "../styles/colors";
@@ -51,18 +51,12 @@ const PostStackNavigator = createStackNavigator(
 const AlbumStackNavigator = createStackNavigator(
   {
     Albums: {
-      screen: withTabBar(HomeScreen, TabID.Album),
-      navigationOptions: appNavigationOptions
-    },
-    Details: {
-      screen: DetailsScreen
-    },
-    Counter: {
-      screen: CounterScreen
+      screen: withTabBar(AlbumScreen, TabID.Album)
     }
   },
   {
     initialRouteName: "Albums",
+    defaultNavigationOptions: appNavigationOptions,
     navigationOptions: {
       tabBarVisible: false
     }
