@@ -13,6 +13,7 @@ import { Post } from "../models/Post";
 import { PostItem } from "../models/PostItem";
 import { SocialAppAPIClient } from "../apiClient";
 import { displayAlert } from "../utils/alert";
+import { openEmail, openURL } from "../utils/url";
 
 import { RouteName } from "./AppNavigator";
 import PostCard from "./PostScreen/PostCard";
@@ -101,15 +102,27 @@ export default class UserDetailScreen extends React.PureComponent<
         };
     }
 
-    renderUserInfoRow(label: string, content: string) {
+    renderUserInfoRow(
+        label: string,
+        content: string,
+        onPressInfo?: () => void
+    ) {
         return (
             <View style={styles.row}>
                 <View style={styles.cell}>
                     <Text style={styles.userInfoTitle}>{label}</Text>
                 </View>
-                <View style={styles.cell}>
-                    <Text style={styles.userInfo}>{content}</Text>
-                </View>
+                {onPressInfo ? (
+                    <TouchableOpacity onPress={onPressInfo}>
+                        <View style={styles.cell}>
+                            <Text style={styles.userInfo}>{content}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ) : (
+                    <View style={styles.cell}>
+                        <Text style={styles.userInfo}>{content}</Text>
+                    </View>
+                )}
             </View>
         );
     }
@@ -133,7 +146,9 @@ export default class UserDetailScreen extends React.PureComponent<
             <React.Fragment>
                 <View style={styles.userInfoContainer}>
                     {this.renderUserInfoRow("Name", user.name)}
-                    {this.renderUserInfoRow("Email Address", user.email)}
+                    {this.renderUserInfoRow("Email", user.email, () =>
+                        openEmail(user.email)
+                    )}
                     {this.renderUserInfoRow(
                         "Address",
                         `${user.address.street}, ${user.address.suite}, ${
@@ -141,7 +156,9 @@ export default class UserDetailScreen extends React.PureComponent<
                         }, ${user.address.zipcode}`
                     )}
                     {this.renderUserInfoRow("Phone", user.phone)}
-                    {this.renderUserInfoRow("Website", user.website)}
+                    {this.renderUserInfoRow("Website", user.website, () =>
+                        openURL(user.website, true)
+                    )}
                 </View>
                 <View>
                     <Text style={styles.separator}>· · ·</Text>
