@@ -13,6 +13,11 @@ export interface APIClient {
     fetchComments(postId: number): Promise<Comment[]>;
     fetchAlbums(cursor: number, limit: number): Promise<Album[]>;
     fetchAlbumsOfUser(userId: number): Promise<Album[]>;
+    fetchPhotos(
+        albumId: number,
+        cursor: number,
+        limit: number
+    ): Promise<Photo[]>;
     fetchUser(userId: number): Promise<User>;
 }
 
@@ -89,6 +94,23 @@ export class SocialAppAPIClient implements APIClient {
         try {
             const res = await _getAPI("albums", { userId });
             return Promise.all(res.map(r => albumSchema.validate(r)));
+        } catch (e) {
+            throw parseError(e);
+        }
+    }
+
+    async fetchPhotos(
+        albumId: number,
+        cursor: number,
+        limit: number
+    ): Promise<Photo[]> {
+        try {
+            const res = await _getAPI("photos", {
+                albumId,
+                _start: cursor,
+                _limit: limit
+            });
+            return Promise.all(res.map(r => photoSchema.validate(r)));
         } catch (e) {
             throw parseError(e);
         }
