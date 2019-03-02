@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
         backgroundColor: Color.codGray
     },
     contentContainer: {
-        paddingBottom: 10
+        paddingBottom: 15,
+        paddingHorizontal: 10
     },
     authorNameContainer: {
         flexWrap: "wrap",
