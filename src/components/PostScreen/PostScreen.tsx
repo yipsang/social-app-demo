@@ -98,6 +98,9 @@ class PostScreen extends React.PureComponent<Props, State> {
     };
 
     loadNextPage = async () => {
+        if (postPaginator.isEnd) {
+            return;
+        }
         this.setState({ isLoading: true });
         try {
             const posts = await postPaginator.next();
