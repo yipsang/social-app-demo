@@ -6,6 +6,7 @@ import {
 import { HomeScreen, DetailsScreen, CounterScreen } from "./Screen";
 import PostScreen from "./PostScreen/PostScreen";
 import PostDetailsScreen from "./PostScreen/PostDetailsScreen";
+import UserDetailsScreen from "./UserDetailsScreen";
 import { withTabBar, TabID } from "./TabBar";
 
 import * as Color from "../styles/colors";
@@ -13,7 +14,8 @@ import * as Color from "../styles/colors";
 export enum RouteName {
   PostTab = "PostTab",
   AlbumTab = "AlbumTab",
-  PostDetailsScreen = "PostDetailsScreen"
+  PostDetailsScreen = "PostDetailsScreen",
+  UserDetailsScreen = "UserDetailsScreen"
 }
 
 const appNavigationOptions = {
@@ -28,16 +30,18 @@ const appNavigationOptions = {
 const PostStackNavigator = createStackNavigator(
   {
     Posts: {
-      screen: withTabBar(PostScreen, TabID.Post),
-      navigationOptions: appNavigationOptions
+      screen: withTabBar(PostScreen, TabID.Post)
     },
     PostDetailsScreen: {
-      screen: PostDetailsScreen,
-      navigationOptions: appNavigationOptions
+      screen: PostDetailsScreen
+    },
+    UserDetailsScreen: {
+      screen: UserDetailsScreen
     }
   },
   {
     initialRouteName: "Posts",
+    defaultNavigationOptions: appNavigationOptions,
     navigationOptions: {
       tabBarVisible: false
     }
