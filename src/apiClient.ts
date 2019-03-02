@@ -3,6 +3,7 @@ import { Post, postSchema } from "./models/Post";
 import { Comment, commentSchema } from "./models/Comment";
 import { Album, albumSchema } from "./models/Album";
 import { User, userSchema } from "./models/User";
+import { Photo, photoSchema } from "./models/Photo";
 import { toQueryString } from "./utils/queryString";
 import { parseError } from "./error";
 
@@ -63,7 +64,22 @@ export class SocialAppAPIClient implements APIClient {
                 _start: cursor,
                 _limit: limit
             });
-            return Promise.all(res.map(r => albumSchema.validate(r)));
+            const previews = (await Promise.all(
+                res.map(a =>
+                    _getAPI("photos", {
+                        albumId: a.id,
+                        _start: 0,
+                        _limit: 1
+                    })
+                )
+            )).map(p => p[0]);
+            const resultsWithPreview = res.map((a, i) => ({
+                ...a,
+                preview: previews[i]
+            }));
+            return Promise.all(
+                resultsWithPreview.map(r => albumSchema.validate(r))
+            );
         } catch (e) {
             throw parseError(e);
         }

@@ -9,7 +9,7 @@ export interface Photo {
 }
 
 export const photoSchema: yup.Schema<Photo> = yup.object<Photo>().shape({
-    userId: yup
+    albumId: yup
         .number()
         .integer()
         .positive()
