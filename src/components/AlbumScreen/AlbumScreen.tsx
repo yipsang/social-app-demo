@@ -13,6 +13,7 @@ import { Album } from "../../models/Album";
 import { User } from "../../models/User";
 import { AlbumItem } from "../../models/AlbumItem";
 
+import { RouteName } from "../AppNavigator";
 import AlbumPreview from "./AlbumPreview";
 import ImagePreviewSkeleton from "../ImagePreviewSkeleton";
 
@@ -117,7 +118,19 @@ class AlbumScreen extends React.PureComponent<Props, State> {
         }
     };
 
-    renderAlbumPreview = (data: { item: AlbumItem | number }) => {
+    onPreviewPress = (index: number) => () => {
+        const { albums, userIdentityMap } = this.state;
+        const album = albums[index];
+        const user = userIdentityMap[album.userId];
+        this.props.navigation.navigate(RouteName.AlbumDetailsScreen, {
+            albumItem: { album, user }
+        });
+    };
+
+    renderAlbumPreview = (data: {
+        item: AlbumItem | number;
+        index: number;
+    }) => {
         if (typeof data.item == "number") {
             return (
                 <View style={styles.cellContainer}>
