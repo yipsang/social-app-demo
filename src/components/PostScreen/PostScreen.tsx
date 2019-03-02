@@ -132,7 +132,7 @@ class PostScreen extends React.PureComponent<Props, State> {
         );
     };
 
-    getPostItem = (): PostItem[] => {
+    getPostItems = (): PostItem[] => {
         const { posts, userIdentityMap } = this.state;
         return posts.map(p => ({ post: p, user: userIdentityMap[p.userId] }));
     };
@@ -168,7 +168,7 @@ class PostScreen extends React.PureComponent<Props, State> {
                 <FlatList
                     style={styles.flatList}
                     contentContainerStyle={styles.contentContainer}
-                    data={this.getPostItem()}
+                    data={this.getPostItems()}
                     renderItem={this.renderPostCard}
                     keyExtractor={this.keyExtractor}
                     onEndReachedThreshold={10}
